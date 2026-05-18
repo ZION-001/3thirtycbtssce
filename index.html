@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>3Thirty WAEC CBT</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #f3f0f8;
+    --surface: #ffffff;
+    --surface2: #ece8f5;
+    --border: #d4c8e8;
+    --accent: #7c3aed;
+    --accent2: #e06000;
+    --green: #16a34a;
+    --red: #dc2626;
+    --text: #1e0a2e;
+    --muted: #8b72a8;
+    --navy: #3a0d5c;
+    --navy-mid: #4a1570;
+    --navy-light: #5c2080;
+    --gold: #c85a00;
+    --gold-btn: #e06000;
+    --gold-light: #ff7820;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    zoom: 0.85;
+  }
+
+  /* ── NAVIGATOR ── */
+  .nav-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+  .nav-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .nav-btn.current { border-color: var(--navy); background: var(--navy); color: #fff; }
+  .nav-btn.correct-nav { border-color: var(--green); background: rgba(22,163,74,0.12); color: var(--green); }
+  .nav-btn.wrong-nav { border-color: var(--red); background: rgba(220,38,38,0.12); color: var(--red); }
+  .nav-legend { width: 100%; display: flex; gap: 12px; font-size: 0.68rem; color: var(--muted); padding-top: 6px; border-top: 1px solid var(--border); margin-top: 4px; }
+  .nav-legend span { display: flex; align-items: center; gap: 4px; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+
+  /* ── SUBTLE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ══════════════════════════════
+     HOME SCREEN
+  ══════════════════════════════ */
+  #home {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .home-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,90,0,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+  }
+
+  .home-inner {
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 8px 18px;
+    margin-bottom: 2rem;
+    letter-spacing: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(58,13,92,0.25);
+  }
+  .badge-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-right: 1px;
+  }
+  .badge-thirty {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    align-self: flex-end;
+    padding-bottom: 3px;
+    margin-right: 10px;
+  }
+  .badge-sep {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
+    margin-right: 10px;
+    align-self: center;
+  }
+  .badge-waec {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    align-self: flex-end;
+    padding-bottom: 3px;
+  }
+
+  h1.hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.4rem, 8vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    color: var(--navy);
+  }
+  h1.hero-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+  }
+
+  /* Subject grid */
+  .subject-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+    text-align: left;
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .subject-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(58,13,92,0.06);
+  }
+  .subject-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--navy) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .subject-card:hover { border-color: var(--navy-light); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(58,13,92,0.12); }
+  .subject-card:hover::after { opacity: 0.05; }
+  .subject-card.selected {
+    border-color: var(--gold);
+    background: rgba(200,90,0,0.06);
+    box-shadow: 0 4px 14px rgba(200,90,0,0.15);
+  }
+  .subject-card.selected::after { opacity: 0.04; }
+
+  .subject-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    position: relative; z-index: 1;
+    color: var(--navy);
+  }
+  .subject-count {
+    font-size: 0.72rem;
+    color: var(--muted);
+    position: relative; z-index: 1;
+  }
+
+  /* Config row */
+  .config-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .config-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .config-group label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+  }
+  .config-group select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b72a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    transition: border-color 0.2s;
+  }
+  .config-group select:focus { border-color: var(--navy); }
+
+  .btn-start {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold-btn);
+    color: #1a0800;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,90,0,0.35); background: var(--gold-light); }
+  .btn-start:active { transform: translateY(0); }
+  .btn-start:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .loading-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--gold-btn));
+    border-radius: 0 3px 3px 0;
+    transition: width 0.3s ease;
+    z-index: 9998;
+  }
+
+  /* ══════════════════════════════
+     QUIZ SCREEN
+  ══════════════════════════════ */
+  #quiz {
+    flex-direction: column;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .quiz-meta {
+    display: flex;
+    flex-direction: column;
+  }
+  .quiz-subject-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .quiz-progress-text {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .quiz-timer {
+    background: var(--navy);
+    border: 1px solid var(--navy-light);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    min-width: 80px;
+    text-align: center;
+    color: #ffffff;
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+  }
+  .quiz-timer.warning { color: var(--gold-light); border-color: var(--gold); background: rgba(200,90,0,0.15); }
+  .quiz-timer.danger { color: #fff; border-color: var(--red); background: var(--red); animation: timerPulse 1s ease infinite; }
+
+  .progress-bar-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 100px;
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--gold-btn));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.3s ease both;
+    box-shadow: 0 4px 16px rgba(58,13,92,0.07);
+  }
+
+  .question-number {
+    font-size: 0.72rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .question-text {
+    font-size: 1rem;
+    line-height: 1.65;
+    font-weight: 400;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+
+  .question-img {
+    width: 100%;
+    max-width: 340px;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--border);
+    display: block;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.5;
+    transition: all 0.18s ease;
+    width: 100%;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--navy-light);
+    background: rgba(58,13,92,0.05);
+  }
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--navy);
+    transition: background 0.18s, color 0.18s;
+  }
+
+  .option-btn.correct {
+    border-color: var(--green);
+    background: rgba(22,163,74,0.07);
+  }
+  .option-btn.correct .option-letter {
+    background: var(--green);
+    color: #fff;
+  }
+  .option-btn.wrong {
+    border-color: var(--red);
+    background: rgba(220,38,38,0.07);
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--red);
+    color: #fff;
+  }
+  .option-btn.reveal-correct {
+    border-color: var(--green);
+    opacity: 0.75;
+  }
+  .option-btn.reveal-correct .option-letter {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .explanation-panel {
+    background: rgba(58,13,92,0.05);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--navy);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--muted);
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .explanation-panel.show { display: block; }
+  .explanation-panel strong { color: var(--navy); font-family: 'Outfit', sans-serif; }
+
+  /* Bottom controls */
+  .quiz-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 1rem;
+    align-items: stretch;
+  }
+
+  .btn-nav-prev {
+    width: 52px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .btn-nav-prev:hover:not(:disabled) { border-color: var(--navy); background: rgba(58,13,92,0.06); }
+  .btn-nav-prev:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-primary {
+    flex: 1;
+    padding: 14px;
+    background: var(--gold-btn);
+    border: none;
+    border-radius: var(--radius);
+    color: #1a0800;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(200,90,0,0.3); transform: translateY(-1px); background: var(--gold-light); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-secondary {
+    flex: 1;
+    padding: 14px;
+    background: var(--surface);
+    border: 1.5px solid var(--gold);
+    border-radius: var(--radius);
+    color: var(--gold);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-secondary:hover { background: rgba(200,90,0,0.07); }
+
+  /* ══════════════════════════════
+     RESULT SCREEN
+  ══════════════════════════════ */
+  #result {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+  }
+
+  .result-inner {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .score-ring {
+    width: 140px; height: 140px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+  .score-ring svg {
+    transform: rotate(-90deg);
+  }
+  .score-ring circle {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+  }
+  .score-ring .ring-bg { stroke: var(--surface2); }
+  .score-ring .ring-fill {
+    stroke: var(--navy);
+    stroke-dasharray: 345;
+    stroke-dashoffset: 345;
+    transition: stroke-dashoffset 1s ease;
+  }
+  .score-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-pct {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--navy);
+  }
+  .score-label-sm {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .result-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--navy);
+  }
+  .result-sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 12px;
+    box-shadow: 0 2px 8px rgba(58,13,92,0.06);
+  }
+  .stat-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .stat-val.green { color: var(--green); }
+  .stat-val.red { color: var(--red); }
+  .stat-val.muted { color: var(--muted); }
+  .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Outfit', sans-serif; font-weight: 600; }
+
+  .result-actions { display: flex; gap: 10px; }
+
+  /* ══════════════════════════════
+     ANIMATIONS
+  ══════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+  @keyframes timerPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .subject-grid { grid-template-columns: 1fr 1fr; }
+    .config-row { flex-direction: column; }
+    .result-stats { grid-template-columns: repeat(3,1fr); }
+    .quiz-timer { font-size: 0.88rem; padding: 7px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════ HOME ══════ -->
+<div class="screen active" id="home">
+  <div class="home-glow"></div>
+  <div class="home-inner">
+    <div class="logo-badge"><span class="badge-num">3</span><span class="badge-thirty">THIRTY</span><span class="badge-sep">×</span><span class="badge-waec">WAEC</span></div>
+    <h1 class="hero-title">Practice.<br><em>Pass.</em> Excel.</h1>
+    <p class="hero-sub">Real WAEC past questions. Pick a subject, set your time, and start drilling.</p>
+
+    <div class="subject-grid" id="subjectGrid">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="config-row">
+      <div class="config-group">
+        <label>Questions</label>
+        <select id="qCount">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="40">40</option>
+          <option value="60">60</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <label>Minutes</label>
+        <select id="timeLimit">
+          <option value="0">No limit</option>
+          <option value="10">10 min</option>
+          <option value="20" selected>20 min</option>
+          <option value="30">30 min</option>
+          <option value="60">60 min</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <label>Year</label>
+        <select id="yearFilter">
+          <option value="all">All years</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btnStart" disabled>Select a subject to begin</button>
+  </div>
+</div>
+
+<!-- ══════ QUIZ ══════ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-meta">
+      <div class="quiz-subject-label" id="quizSubjectLabel">Mathematics</div>
+      <div class="quiz-progress-text" id="quizProgressText">Question 1 of 20</div>
+    </div>
+    <div class="quiz-timer" id="quizTimer">20:00</div>
+  </div>
+
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
+  <div class="nav-panel" id="navPanel"></div>
+
+  <div class="question-card">
+    <div class="question-number" id="questionNumber">Q1</div>
+    <p class="question-text" id="questionText">Loading...</p>
+    <img class="question-img" id="questionImg" src="" alt="" style="display:none">
+    <div class="options-list" id="optionsList"></div>
+    <div class="explanation-panel" id="explanationPanel"></div>
+  </div>
+
+  <div class="quiz-controls">
+    <button class="btn-secondary" id="btnQuit" onclick="quitQuiz()">Quit</button>
+    <button class="btn-nav-prev" id="btnPrev" onclick="prevQuestion()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="btn-primary" id="btnNext" onclick="nextQuestion()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ RESULT ══════ -->
+<div class="screen" id="result">
+  <div class="result-inner">
+    <div class="score-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle class="ring-bg" cx="70" cy="70" r="55"/>
+        <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="55"/>
+      </svg>
+      <div class="score-ring-text">
+        <div class="score-pct" id="scorePct">0%</div>
+        <div class="score-label-sm">Score</div>
+      </div>
+    </div>
+
+    <div class="result-title" id="resultTitle">Well done!</div>
+    <div class="result-sub" id="resultSub">You completed the quiz.</div>
+
+    <div class="result-stats">
+      <div class="stat-box">
+        <div class="stat-val green" id="statCorrect">0</div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val red" id="statWrong">0</div>
+        <div class="stat-lbl">Wrong</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val muted" id="statSkipped">0</div>
+        <div class="stat-lbl">Skipped</div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-secondary" onclick="goHome()" style="flex:1">← Home</button>
+      <button class="btn-primary" onclick="retryQuiz()" style="flex:2">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  CONFIG — update these paths as needed
+// ════════════════════════════════════════
+const DATA_PATH = 'data/subjects/';
+const IMAGES_PATH = 'images/';
+
+const SUBJECTS = [
+  { id: 1,  file: '1_Mathematics.json',                          name: 'Mathematics',         short: 'Maths' },
+  { id: 2,  file: '2_English_Language.json',                     name: 'English Language',    short: 'Eng' },
+  { id: 3,  file: '3_Chemistry.json',                            name: 'Chemistry',           short: 'Chem' },
+  { id: 4,  file: '4_Physics.json',                              name: 'Physics',             short: 'Phy' },
+  { id: 5,  file: '5_Biology.json',                              name: 'Biology',             short: 'Bio' },
+  { id: 6,  file: '6_Geography.json',                            name: 'Geography',           short: 'Geo' },
+  { id: 7,  file: '7_Literature_in_English.json',                name: 'Literature',          short: 'Lit.' },
+  { id: 8,  file: '8_Economics.json',                            name: 'Economics',           short: 'Econs' },
+  { id: 9,  file: '9_Commerce.json',                             name: 'Commerce',            short: 'Comm' },
+  { id: 10, file: '10_Accounts_-_Principles_of_Accounts.json',   name: 'Accounts',            short: 'Acc' },
+  { id: 11, file: '11_Government.json',                          name: 'Government',          short: 'Govt' },
+  { id: 12, file: '12_Christian_Religious_Knowledge_CRK.json',   name: 'CRK',                 short: 'CRK' },
+  { id: 13, file: '13_Agricultural_Science.json',                name: 'Agric Science',       short: 'Agric' },
+  { id: 16, file: '16_Animal_Husbandry.json',                    name: 'Animal Husbandry',    short: 'Ani-Hus' },
+  { id: 18, file: '18_Civic_Education.json',                     name: 'Civic Education',     short: 'Civic' },
+  { id: 19, file: '19_Further_Mathematics.json',                 name: 'Further Maths',       short: 'F.Maths' },
+  { id: 21, file: '21_Data_Processing.json',                     name: 'Data Processing',     short: 'Data Pro' },
+  { id: 24, file: '24_Marketing.json',                           name: 'Marketing',           short: 'Markt' },
+];
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let allQuestions = [];
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let wrongCount = 0;
+let skippedCount = 0;
+let answered = false;
+let timerInterval = null;
+let timeLeft = 0;
+let selectedSubject = null;
+let lastConfig = {};
+let answerMap = {}; // index -> 'correct' | 'wrong' | 'skipped'
+
+// ════════════════════════════════════════
+//  INIT HOME
+// ════════════════════════════════════════
+function initHome() {
+  const grid = document.getElementById('subjectGrid');
+  grid.innerHTML = '';
+  SUBJECTS.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.dataset.id = s.id;
+    card.innerHTML = `<div class="subject-name">${s.name}</div><div class="subject-count">Tap to select</div>`;
+    card.onclick = () => selectSubject(s, card);
+    grid.appendChild(card);
+  });
+
+  // Populate year filter
+  const years = [];
+  for (let y = 2024; y >= 2000; y--) years.push(y);
+  const sel = document.getElementById('yearFilter');
+  years.forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    sel.appendChild(opt);
+  });
+}
+
+function selectSubject(subject, cardEl) {
+  document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('selected'));
+  cardEl.classList.add('selected');
+  selectedSubject = subject;
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnStart').textContent = `Start ${subject.short} Quiz →`;
+}
+
+// ════════════════════════════════════════
+//  LOAD & START QUIZ
+// ════════════════════════════════════════
+document.getElementById('btnStart').onclick = async () => {
+  if (!selectedSubject) return;
+  document.getElementById('btnStart').textContent = 'Loading…';
+  document.getElementById('btnStart').disabled = true;
+
+  try {
+    const res = await fetch(DATA_PATH + selectedSubject.file);
+    allQuestions = await res.json();
+
+    const yearFilter = document.getElementById('yearFilter').value;
+    let pool = yearFilter === 'all' ? allQuestions : allQuestions.filter(q => q.exam_year == yearFilter);
+    if (pool.length === 0) pool = allQuestions;
+
+    const count = parseInt(document.getElementById('qCount').value);
+    const minutes = parseInt(document.getElementById('timeLimit').value);
+
+    quizQuestions = shuffle(pool).slice(0, Math.min(count, pool.length));
+    lastConfig = { subject: selectedSubject, count, minutes, yearFilter };
+
+    startQuiz(minutes);
+  } catch (e) {
+    document.getElementById('btnStart').disabled = false;
+    document.getElementById('btnStart').textContent = `Start ${selectedSubject.short} Quiz →`;
+    alert('Could not load questions. Make sure the data files are in the correct folder.');
+  }
+};
+
+function startQuiz(minutes) {
+  currentIndex = 0;
+  score = 0; wrongCount = 0; skippedCount = 0;
+  answerMap = {};
+  showScreen('quiz');
+  document.getElementById('quizSubjectLabel').textContent = selectedSubject.name;
+
+  // Timer
+  clearInterval(timerInterval);
+  if (minutes > 0) {
+    timeLeft = minutes * 60;
+    updateTimer();
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) { clearInterval(timerInterval); finishQuiz(); }
+    }, 1000);
+  } else {
+    document.getElementById('quizTimer').textContent = '∞';
+  }
+
+  renderQuestion();
+}
+
+// ════════════════════════════════════════
+//  RENDER QUESTION
+// ════════════════════════════════════════
+function renderQuestion() {
+  answered = false;
+  document.getElementById('explanationPanel').classList.remove('show');
+  document.getElementById('explanationPanel').innerHTML = '';
+
+  const q = quizQuestions[currentIndex];
+  const total = quizQuestions.length;
+
+  // Prev/Next button state
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  btnPrev.disabled = currentIndex === 0;
+  // Next always enabled; last question shows finish icon
+  btnNext.innerHTML = currentIndex < total - 1
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  document.getElementById('questionNumber').textContent = `Q${currentIndex + 1}`;
+  document.getElementById('quizProgressText').textContent = `Question ${currentIndex + 1} of ${total}`;
+  document.getElementById('progressFill').style.width = `${(currentIndex / total) * 100}%`;
+
+  // Parse markdown in question text
+  document.getElementById('questionText').innerHTML = parseMarkdown(q.question);
+
+  // Image
+  const imgEl = document.getElementById('questionImg');
+  if (q.photo && q.photo.trim() !== '') {
+    imgEl.src = IMAGES_PATH + q.photo;
+    imgEl.style.display = 'block';
+    imgEl.onerror = () => { imgEl.style.display = 'none'; };
+  } else {
+    imgEl.style.display = 'none';
+  }
+
+  // Options
+  const opts = [
+    { key: 'a', text: q.option_a },
+    { key: 'b', text: q.option_b },
+    { key: 'c', text: q.option_c },
+    { key: 'd', text: q.option_d },
+    { key: 'e', text: q.option_e },
+  ].filter(o => o.text && o.text.trim() !== '');
+
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${opt.key.toUpperCase()}</span><span>${parseMarkdown(opt.text)}</span>`;
+    btn.onclick = () => selectAnswer(opt.key, q.correct_answer, btn);
+    list.appendChild(btn);
+  });
+
+  // Typeset all math in the question card
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetClear([document.querySelector('.question-card')]);
+    MathJax.typesetPromise([document.querySelector('.question-card')]).catch(() => {});
+  }
+
+  // Scroll top
+  document.getElementById('quiz').scrollTo(0, 0);
+}
+
+function selectAnswer(chosen, correct, clickedBtn) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (chosen === correct) {
+    clickedBtn.classList.add('correct');
+    score++;
+    answerMap[currentIndex] = 'correct';
+  } else {
+    clickedBtn.classList.add('wrong');
+    wrongCount++;
+    answerMap[currentIndex] = 'wrong';
+    // Reveal correct
+    allBtns.forEach(b => {
+      const letter = b.querySelector('.option-letter').textContent.toLowerCase();
+      if (letter === correct) b.classList.add('reveal-correct');
+    });
+  }
+
+  // Show explanation
+  const q = quizQuestions[currentIndex];
+  if (q.step_by_step && q.step_by_step.trim()) {
+    const panel = document.getElementById('explanationPanel');
+    const short = q.step_by_step.replace(/\n{3,}/g, '\n\n').trim();
+    const preview = short.length > 500 ? short.slice(0, 500) + '…' : short;
+    panel.innerHTML = `<strong>Explanation:</strong><br>${parseMarkdown(preview)}`;
+    panel.classList.add('show');
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetClear([panel]);
+      MathJax.typesetPromise([panel]).catch(() => {});
+    }
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex === 0) return;
+  currentIndex--;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (!answered) {
+    // Only count as skipped if not already recorded
+    if (!answerMap[currentIndex]) {
+      answerMap[currentIndex] = 'skipped';
+      skippedCount++;
+      wrongCount++;
+    }
+  }
+  currentIndex++;
+  if (currentIndex >= quizQuestions.length) {
+    finishQuiz();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════
+function updateTimer() {
+  const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  const el = document.getElementById('quizTimer');
+  el.textContent = `${m}:${s}`;
+  el.className = 'quiz-timer';
+  if (timeLeft <= 60) el.classList.add('danger');
+  else if (timeLeft <= 180) el.classList.add('warning');
+}
+
+// ════════════════════════════════════════
+//  FINISH
+// ════════════════════════════════════════
+function finishQuiz() {
+  clearInterval(timerInterval);
+  showScreen('result');
+
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('scorePct').textContent = pct + '%';
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = wrongCount;
+  document.getElementById('statSkipped').textContent = skippedCount;
+
+  const grades = [
+    [80, '🏆 Excellent!', 'Outstanding performance. Keep it up!'],
+    [60, '👍 Good Job!', 'Solid score. A bit more practice and you\'ll ace it.'],
+    [40, '📚 Keep Studying', 'You\'re getting there. Review the topics and try again.'],
+    [0,  '💪 Don\'t Give Up', 'Every expert was once a beginner. Keep drilling!'],
+  ];
+  const [, title, sub] = grades.find(([min]) => pct >= min);
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+
+  // Ring animation
+  const circumference = 2 * Math.PI * 55;
+  const offset = circumference - (pct / 100) * circumference;
+  const ring = document.getElementById('ringFill');
+  ring.style.strokeDasharray = circumference;
+  ring.style.strokeDashoffset = circumference;
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+
+  // Color ring by score
+  ring.style.stroke = pct >= 60 ? 'var(--green)' : pct >= 40 ? '#e06000' : 'var(--red)';
+  document.getElementById('scorePct').style.color = pct >= 60 ? 'var(--green)' : pct >= 40 ? '#e06000' : 'var(--red)';
+}
+
+function quitQuiz() {
+  if (confirm('Quit the quiz? Your progress will be lost.')) {
+    clearInterval(timerInterval);
+    goHome();
+  }
+}
+
+function goHome() {
+  showScreen('home');
+}
+
+function retryQuiz() {
+  startQuiz(lastConfig.minutes);
+}
+
+// ════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function setLoading(pct) {
+  document.getElementById('loadingBar').style.width = pct + '%';
+  if (pct >= 100) setTimeout(() => { document.getElementById('loadingBar').style.width = '0'; }, 500);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ════════════════════════════════════════
+//  MARKDOWN PARSER (lightweight)
+// ════════════════════════════════════════
+function parseMarkdown(text) {
+  if (!text) return '';
+
+  // 1. Extract and protect all LaTeX blocks so they aren't touched
+  const latexTokens = [];
+  text = text
+    .replace(/\$\$[\s\S]+?\$\$/g, m => { latexTokens.push(m); return `\x00LATEX${latexTokens.length - 1}\x00`; })
+    .replace(/\\\[[\s\S]+?\\\]/g, m => { latexTokens.push(m); return `\x00LATEX${latexTokens.length - 1}\x00`; })
+    .replace(/\\\([\s\S]+?\\\)/g, m => { latexTokens.push(m); return `\x00LATEX${latexTokens.length - 1}\x00`; })
+    .replace(/\$[^$\n]+?\$/g,     m => { latexTokens.push(m); return `\x00LATEX${latexTokens.length - 1}\x00`; });
+
+  // 2. Markdown transforms (safe — no LaTeX present)
+  text = text
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^[-=]{3,}\s*$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:8px 0">')
+    .replace(/^\|(.+)\|$/gm, (_, inner) => {
+      const cells = inner.split('|').map(c => c.trim()).filter(Boolean);
+      return '<div style="display:flex;gap:12px;font-size:0.85em;padding:3px 0">' +
+        cells.map(c => `<span style="flex:1">${c}</span>`).join('') + '</div>';
+    })
+    .replace(/\n/g, '<br>');
+
+  // 3. Restore LaTeX tokens
+  text = text.replace(/\x00LATEX(\d+)\x00/g, (_, i) => latexTokens[+i]);
+
+  return text;
+}
+
+// ════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════
+initHome();
+</script>
+</body>
+</html>
